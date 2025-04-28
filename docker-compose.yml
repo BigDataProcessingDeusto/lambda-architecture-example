@@ -1,0 +1,58 @@
+services:
+  zookeeper:
+    image: bitnami/zookeeper:3.8
+    container_name: zookeeper
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    # ports:
+    #   - "2181:2181"
+
+  kafka-server:
+    image: bitnami/kafka:3.5
+    container_name: kafka-server
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-server:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+
+
+
+  topic-creator:
+    image: apache/kafka:3.7.2
+    depends_on:
+      - kafka-server
+    entrypoint: [ "sh", "-c", "
+      while ! nc -z kafka-server 9092; do sleep 1; done;
+      sleep 5;
+      echo 'Creating topics...';
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic pizza-orders --config cleanup.policy=compact;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic pizza-live-stats --config cleanup.policy=compact;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic connect-offset --config cleanup.policy=compact;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic connect-status --config cleanup.policy=compact;
+      echo 'Topics created successfully.';
+    "]
+
+  datagen:
+    # image: cnfldemos/kafka-connect-datagen:0.6.4-7.6.0
+    # image: bitnami/kafka:3.5
+    build:
+      context: datagen
+    depends_on:
+      - kafka-server
+      - topic-creator
+    # entrypoint: [ "sh", "-c", "
+    #   /opt/bitnami/kafka/bin/connect-standalone.sh /opt/bitnami/kafka/connect-standalone.properties /opt/kafka/datagen-config/pizza-orders-source.properties /opt/bitnami/kafka/pizza-cancelled-orders-source.properties
+    # "]
+    volumes:
+      - type: bind
+        source: ./datagen
+        target: /opt/kafka/datagen-config
