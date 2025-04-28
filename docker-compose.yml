@@ -34,25 +34,19 @@ services:
       while ! nc -z kafka-server 9092; do sleep 1; done;
       sleep 5;
       echo 'Creating topics...';
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic pizza-orders --config cleanup.policy=compact;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic pizza-live-stats --config cleanup.policy=compact;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic connect-offset --config cleanup.policy=compact;
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic connect-status --config cleanup.policy=compact;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic pizza-orders;
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-server:9092 --create --if-not-exists --topic pizza-live-stats;
       echo 'Topics created successfully.';
     "]
 
   datagen:
-    # image: cnfldemos/kafka-connect-datagen:0.6.4-7.6.0
-    # image: bitnami/kafka:3.5
     build:
       context: datagen
     depends_on:
       - kafka-server
       - topic-creator
-    # entrypoint: [ "sh", "-c", "
-    #   /opt/bitnami/kafka/bin/connect-standalone.sh /opt/bitnami/kafka/connect-standalone.properties /opt/kafka/datagen-config/pizza-orders-source.properties /opt/bitnami/kafka/pizza-cancelled-orders-source.properties
-    # "]
     volumes:
-      - type: bind
-        source: ./datagen
-        target: /opt/kafka/datagen-config
+      - filesink:/opt/bitnami/kafka/filesink
+
+volumes:
+  filesink:
