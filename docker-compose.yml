@@ -48,5 +48,12 @@ services:
     volumes:
       - filesink:/opt/bitnami/kafka/filesink
 
+  spark:
+    build:
+      context: spark
+    depends_on:
+      - kafka-server
+      - topic-creator
+
 volumes:
   filesink:
