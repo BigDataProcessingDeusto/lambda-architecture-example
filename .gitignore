@@ -1,1 +1,6 @@
 kafka/datagen/libs/**
+airflow/config
+airflow/logs
+airflow/plugins
+
+**/**.pyc
