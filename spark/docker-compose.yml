@@ -1,0 +1,11 @@
+services:
+   spark:
+    build:
+      context: .
+    networks:
+      - lambda-example
+
+networks:
+  lambda-example:
+    external: false
+    name: lambda-example

@@ -1,2 +1,1 @@
-datagen/libs/**
-filesink
+kafka/datagen/libs/**
