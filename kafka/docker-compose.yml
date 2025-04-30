@@ -39,9 +39,18 @@ services:
     networks:
       - lambda-example
 
-  datagen:
+  datagen-source:
     build:
-      context: datagen
+      context: datagen/source
+    depends_on:
+      - kafka-server
+      - topic-creator
+    networks:
+      - lambda-example
+
+  datagen-sink:
+    build:
+      context: datagen/sink
     depends_on:
       - kafka-server
       - topic-creator
