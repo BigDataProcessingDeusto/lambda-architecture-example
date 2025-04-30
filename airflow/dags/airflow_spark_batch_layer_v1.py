@@ -20,11 +20,12 @@ with DAG(
 ) as dag:
     bash_task = BashOperator(
         task_id="rm_output",
-        bash_command="rm -rf /home/mikel/TGVD/lambda/spark-batch-output"
+        bash_command="rm -rf /opt/airflow/spark-batch-output/output"
     )
 
     submit_job = SparkSubmitOperator(
-        application="/home/mikel/TGVD/lambda/spark-batch-layer.py", task_id="submit_job"
+        application="/opt/airflow/spark/spark-batch-layer.py", task_id="submit_job",
+        conn_id="spark-local"
     )
 
     bash_task >> submit_job

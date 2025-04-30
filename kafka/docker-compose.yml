@@ -52,6 +52,8 @@ services:
 
 volumes:
   filesink:
+    external: false
+    name: filesink
 
 networks:
   lambda-example:
