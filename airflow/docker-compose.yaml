@@ -72,13 +72,18 @@ x-airflow-common:
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
     # The following line can be used to set a custom config file, stored in the local config folder
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
+    AIRFLOW_CONN_SPARK_DEFAULT: '{
+      "host": "spark://spark-master",
+      "port": "7077"
+    }'
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
     - ${AIRFLOW_PROJ_DIR:-.}/spark:/opt/airflow/spark
-    - spark-batch-output:/opt/airflow/spark-batch-output
+    - spark-batch-output:/opt/spark/work-dir/spark-batch-output
+    - filesink:/opt/spark/work-dir/filesink
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -314,6 +319,9 @@ volumes:
   spark-batch-output:
     external: false
     name: spark-batch-output
+  filesink:
+    external: false
+    name: filesink
 
 networks:
   lambda-example:

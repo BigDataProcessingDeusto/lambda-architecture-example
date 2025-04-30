@@ -7,7 +7,8 @@ spark = SparkSession \
     .getOrCreate()
 spark.sparkContext.setLogLevel("ERROR")
 
-df = spark.read.json('/opt/spark/work-dir/filesink/pizza-orders.txt')
+df = spark.read.json('/opt/spark/work-dir/filesink/')
+df.printSchema()
 df = df.select(f.col("payload.*"))
 
 df = df.select("coupon_code", "date", "status", "store_id", "store_order_id", f.explode("order_lines"))
