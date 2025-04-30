@@ -14,7 +14,7 @@ services:
 
   spark-worker:
     image: spark:3.5.5
-    command: /opt/spark/sbin/start-worker.sh spark://spark-master:7077
+    command: /opt/spark/sbin/start-worker.sh -c 4 -m 4G spark://spark-master:7077
     deploy:
       mode: replicated
       replicas: 3
