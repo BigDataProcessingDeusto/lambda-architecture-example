@@ -1,9 +1,35 @@
 services:
-   spark:
+  spark-master:
+    image: spark:3.5.5
+    command: /opt/spark/sbin/start-master.sh
+    environment:
+      SPARK_NO_DAEMONIZE: true
+    ports:
+      - 8081:8080
+    networks:
+      - lambda-example
+
+  spark-worker:
+    image: spark:3.5.5
+    command: /opt/spark/sbin/start-worker.sh spark://spark-master:7077
+    deploy:
+      mode: replicated
+      replicas: 3
+    environment:
+      SPARK_NO_DAEMONIZE: true
+    networks:
+      - lambda-example
+    depends_on:
+      - spark-master
+
+  spark:
     build:
       context: .
     networks:
       - lambda-example
+    depends_on:
+      - spark-master
+      - spark-worker
 
 networks:
   lambda-example:
