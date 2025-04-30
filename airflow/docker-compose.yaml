@@ -77,7 +77,6 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
-    - filesink:/opt/airflow/filesink
     - ${AIRFLOW_PROJ_DIR:-.}/spark:/opt/airflow/spark
     - spark-batch-output:/opt/airflow/spark-batch-output
   user: "${AIRFLOW_UID:-50000}:0"
@@ -312,10 +311,9 @@ services:
 
 volumes:
   postgres-db-volume:
-  filesink:
-    external: false
-    name: filesink
   spark-batch-output:
+    external: false
+    name: spark-batch-output
 
 networks:
   lambda-example:

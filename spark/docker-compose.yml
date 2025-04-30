@@ -8,6 +8,9 @@ services:
       - 8081:8080
     networks:
       - lambda-example
+    volumes:
+      - filesink:/opt/spark/work-dir/filesink
+      - spark-batch-output:/opt/work-dir/spark-batch-output
 
   spark-worker:
     image: spark:3.5.5
@@ -19,6 +22,9 @@ services:
       SPARK_NO_DAEMONIZE: true
     networks:
       - lambda-example
+    volumes:
+      - filesink:/opt/spark/work-dir/filesink
+      - spark-batch-output:/opt/work-dir/spark-batch-output
     depends_on:
       - spark-master
 
@@ -35,3 +41,11 @@ networks:
   lambda-example:
     external: false
     name: lambda-example
+
+volumes:
+  filesink:
+    external: false
+    name: filesink
+  spark-batch-output:
+    external: false
+    name: spark-batch-output
