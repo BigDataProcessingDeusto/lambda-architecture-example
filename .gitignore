@@ -1,4 +1,4 @@
-kafka/datagen/libs/**
+kafka/plugins/**
 airflow/config
 airflow/logs
 airflow/plugins
