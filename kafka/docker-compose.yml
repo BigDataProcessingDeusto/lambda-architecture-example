@@ -56,6 +56,7 @@ services:
       - topic-creator
     volumes:
       - filesink:/opt/bitnami/kafka/filesink
+      - ./plugins:/opt/bitnami/kafka/plugins
     networks:
       - lambda-example
 
