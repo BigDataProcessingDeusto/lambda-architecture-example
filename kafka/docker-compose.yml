@@ -39,29 +39,18 @@ services:
     networks:
       - lambda-example
 
-  datagen-source:
+  datagen:
     build:
-      context: datagen/source
+      context: datagen
     depends_on:
       - kafka-server
       - topic-creator
     volumes:
-          - ./plugins:/opt/bitnami/kafka/plugins
-    networks:
-      - lambda-example
-
-  datagen-sink:
-    build:
-      context: datagen/sink
-    depends_on:
-      - kafka-server
-      - topic-creator
+      - ./plugins:/opt/bitnami/kafka/plugins
+      - filesink:/opt/bitnami/kafka/filesink
     environment:
       - AWS_ACCESS_KEY_ID=minio-root-user
       - AWS_SECRET_ACCESS_KEY=minio-root-password
-    volumes:
-      - filesink:/opt/bitnami/kafka/filesink
-      - ./plugins:/opt/bitnami/kafka/plugins
     networks:
       - lambda-example
 
