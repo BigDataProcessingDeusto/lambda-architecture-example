@@ -1,6 +1,5 @@
 FROM bitnami/kafka:3.5
 
-ADD libs/* /opt/bitnami/kafka/libs
 ADD pizza-cancelled-orders-source.properties pizza-orders-source.properties connect-standalone.properties /opt/bitnami/kafka
 
 RUN mkdir /opt/bitnami/kafka/filesink

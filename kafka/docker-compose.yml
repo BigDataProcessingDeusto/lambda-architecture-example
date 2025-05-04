@@ -45,6 +45,8 @@ services:
     depends_on:
       - kafka-server
       - topic-creator
+    volumes:
+          - ./plugins:/opt/bitnami/kafka/plugins
     networks:
       - lambda-example
 
@@ -54,6 +56,9 @@ services:
     depends_on:
       - kafka-server
       - topic-creator
+    environment:
+      - AWS_ACCESS_KEY_ID=minio-root-user
+      - AWS_SECRET_ACCESS_KEY=minio-root-password
     volumes:
       - filesink:/opt/bitnami/kafka/filesink
       - ./plugins:/opt/bitnami/kafka/plugins
