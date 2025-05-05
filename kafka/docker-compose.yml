@@ -47,7 +47,6 @@ services:
       - topic-creator
     volumes:
       - ./plugins:/opt/bitnami/kafka/plugins
-      - filesink:/opt/bitnami/kafka/filesink
     environment:
       - AWS_ACCESS_KEY_ID=minio-root-user
       - AWS_SECRET_ACCESS_KEY=minio-root-password
