@@ -14,4 +14,4 @@ USER airflow
 ENV JAVA_HOME /opt/java/jdk1.8.0_202
 RUN export JAVA_HOME
 
-RUN pip install "apache-airflow==${AIRFLOW_VERSION}" --no-cache-dir apache-airflow-providers-apache-spark
+RUN pip install "apache-airflow==${AIRFLOW_VERSION}" --no-cache-dir apache-airflow-providers-apache-spark apache-airflow[amazon]
